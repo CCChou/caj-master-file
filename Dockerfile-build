@@ -1,0 +1,16 @@
+FROM registry.access.redhat.com/ubi8/openjdk-11:1.15-1.1679485219 as build
+ARG APP_HOME=/home/jboss APP_NAME=master-file
+WORKDIR ${APP_HOME}
+USER root
+COPY . .
+RUN chown -R jboss:root ${APP_HOME}
+RUN chmod +x ${APP_HOME}/gradlew
+USER jboss
+RUN ./gradlew build -x test
+
+FROM registry.access.redhat.com/ubi8/openjdk-11-runtime:1.15-1.1679485252
+ARG APP_HOME=/home/jboss APP_NAME=master-file
+EXPOSE 8080
+WORKDIR ${APP_HOME}
+COPY --from=build ${APP_HOME}/build/libs/${APP_NAME}-0.0.1-SNAPSHOT.jar ./app.jar
+CMD [ "java","-jar","app.jar" ]

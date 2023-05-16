@@ -1,0 +1,10 @@
+# Gradle
+build
+**/.gradle
+
+# IDE
+.vscode
+bin
+
+# MAC
+.DS_Store

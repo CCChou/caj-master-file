@@ -1,0 +1,50 @@
+spring:
+  application:
+    name: master-file 
+  jpa:
+    database-platform: ${DB_DIALECT:org.hibernate.dialect.H2Dialect}
+    defer-datasource-initialization: true
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: ${DB_URL:jdbc:h2:mem:lab;DB_CLOSE_DELAY=-1}
+    username: ${DB_USER:sa}
+    password: ${DB_PXD:sa}
+    driver-class-name: ${DB_DRIVER:org.h2.Driver}
+    hikari:
+      connection-timeout: 30000
+      idleTimeout: 600000
+      maxLifetime: 1800000
+      minimum-idle: 1
+      maximum-pool-size: 10
+      auto-commit: true
+  h2:
+    console:
+      enabled: true
+      path: /h2
+      settings:
+        web-allow-others: true
+  main:
+    allow-circular-references: true
+  sleuth:
+    otel:
+      config:
+        trace-id-ratio-based: 1.0
+      exporter:
+        otlp:
+          endpoint: ${JAEGER_URI:http://jaeger-collector.istio-system.svc.cluster.local:4317}
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+        - health
+        - info
+        - prometheus
+caj-web:
+  tittle: ${WEB_TITTLE:Day2 CAJ v1}
